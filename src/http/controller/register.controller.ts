@@ -1,6 +1,7 @@
 import {FastifyRequest, FastifyReply} from 'fastify'
 import { z } from "zod"
-import { registerUserService } from '../services/register.service'
+import { RegisterUserService } from '../services/register.service'
+import { PrimaUsersRepository } from '@/repositories/prima-users-repository'
 
 export async function registerUser(request: FastifyRequest, reply:FastifyReply) {
   const registerUserBodySchema = z.object({
@@ -12,7 +13,9 @@ export async function registerUser(request: FastifyRequest, reply:FastifyReply) 
   const { name, email, password } = registerUserBodySchema.parse(request.body)
 
   try {
-    await registerUserService({name,email,password})
+    const usersRepository = new PrimaUsersRepository()
+    const registerUserService = new RegisterUserService(usersRepository)
+    await registerUserService.execute({name,email,password})
   } catch (err) {
     return reply.status(409).send()
   }
