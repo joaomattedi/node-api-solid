@@ -8,7 +8,7 @@ export async function registerUser(request: FastifyRequest, reply:FastifyReply) 
   const registerUserBodySchema = z.object({
     name: z.string(),
     email: z.string(),
-    password: z.string(),
+    password: z.string().min(6),
   })
 
   const { name, email, password } = registerUserBodySchema.parse(request.body)
@@ -21,7 +21,7 @@ export async function registerUser(request: FastifyRequest, reply:FastifyReply) 
     if (err instanceof UserAlreadyExistsError) {
       return reply.status(409).send({ message: err.message })
     }
-    return reply.status(500).send() // TODO: fix
+    throw err
   }
 
   return reply.status(201).send()
