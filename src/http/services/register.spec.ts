@@ -1,14 +1,19 @@
-import { expect, describe, it } from 'vitest'
+import { expect, describe, it, beforeEach } from 'vitest'
 import { RegisterUserService } from './register.service'
 import { compare } from 'bcryptjs'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { UserAlreadyExistsError } from './errors/user-already-exists-error'
 
-describe('Register service', () => {
-  it('should be able to register', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const registerService = new RegisterUserService(usersRepository)
+let usersRepository: InMemoryUsersRepository
+let registerService: RegisterUserService
 
+describe('Register service', () => {
+  beforeEach(() => {
+    usersRepository = new InMemoryUsersRepository()
+    registerService = new RegisterUserService(usersRepository)
+  })
+
+  it('should be able to register', async () => {
     const { user } = await registerService.execute({
       name: 'John Doe',
       email: 'johndoe@email.com',
