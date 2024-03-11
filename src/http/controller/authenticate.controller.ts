@@ -3,6 +3,7 @@ import { z } from "zod"
 import { PrimaUsersRepository } from '@/repositories/prisma/prisma-users-repository'
 import { AuthenticateService } from '../services/authenticate.service'
 import { InvalidCredentialsError } from '../services/errors/invalid-credentials-error'
+import { makeAuthenticateService } from '../services/factories/make-authenticate-service'
 
 export async function authenticate(request: FastifyRequest, reply:FastifyReply) {
   const authenticateBodySchema = z.object({
@@ -13,8 +14,7 @@ export async function authenticate(request: FastifyRequest, reply:FastifyReply) 
   const { email, password } = authenticateBodySchema.parse(request.body)
 
   try {
-    const usersRepository = new PrimaUsersRepository()
-    const authenticateService = new AuthenticateService(usersRepository)
+    const authenticateService = makeAuthenticateService()
     await authenticateService.execute({ email, password })
   } catch (err) {
     if (err instanceof InvalidCredentialsError) {
