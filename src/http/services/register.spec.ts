@@ -24,9 +24,6 @@ describe('Register service', () => {
   })
 
   it('should hash user password upon registration', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const registerService = new RegisterUserService(usersRepository)
-
     const { user } = await registerService.execute({
       name: 'John Doe',
       email: 'johndoe@email.com',
@@ -42,9 +39,6 @@ describe('Register service', () => {
   })
 
   it('should not be able to register with same email twice', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const registerService = new RegisterUserService(usersRepository)
-
     const email = 'johndoe@email.com'
 
     await registerService.execute({
