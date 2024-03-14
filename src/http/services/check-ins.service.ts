@@ -14,15 +14,9 @@ export class CheckInsService {
   constructor(private checkInsRepository: CheckInsRepository) {}
 
   async execute({ userId, gymId }: CheckInServiceRequest): Promise<CheckInServiceResponse> {
-    const checkInsFromUser = await this.checkInsRepository.findByUserId(userId);
-    const today = new Date()
-    const userHasAlreadyCheckedInToday = checkInsFromUser.some(checkIn => (
-      checkIn.created_at.getDate() === today.getDate()
-      && checkIn.created_at.getMonth() === today.getMonth()
-      && checkIn.created_at.getFullYear() === today.getFullYear()
-    ))
+    const checkInOnSameDate = await this.checkInsRepository.findByUserIdOnDate(userId, new Date());
 
-    if (userHasAlreadyCheckedInToday) {
+    if (checkInOnSameDate) {
       throw new Error('teste')
     }
 
