@@ -6,7 +6,7 @@ let checkInsRepository: InMemoryCheckInsRepository
 let sut: CheckInsService // sut -> system under tests
 
 
-describe('Authenticate service', () => {
+describe('Check Ins service', () => {
   beforeEach(() => {
     checkInsRepository = new InMemoryCheckInsRepository()
     sut = new CheckInsService(checkInsRepository)
