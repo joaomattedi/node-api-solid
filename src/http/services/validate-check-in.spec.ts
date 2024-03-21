@@ -12,11 +12,11 @@ describe('Validate Check Ins service', () => {
     checkInsRepository = new InMemoryCheckInsRepository()
     sut = new ValidateCheckInsService(checkInsRepository)
     
-    // vi.useFakeTimers()
+    vi.useFakeTimers()
   })
 
   afterEach(() => {
-    // vi.useRealTimers()
+    vi.useRealTimers()
   })
 
   it('should be able to validate a check-in', async () => {
@@ -34,5 +34,19 @@ describe('Validate Check Ins service', () => {
     await expect(() =>
       sut.execute({checkInId: '1'})
     ).rejects.toBeInstanceOf(ResourceNotFoundError)
+  })
+
+  it('should not be able to validate the check-in after 20 minutes of its creation', async () => {
+    vi.setSystemTime(new Date(2024, 2, 21, 20, 0))
+
+    const createdCheckIn = await checkInsRepository.create({gym_id: 'gym-01', user_id: 'user-01'})
+
+    const twentyOneMinutesInMs = 1000 * 60 * 21
+    vi.advanceTimersByTime(twentyOneMinutesInMs)
+
+    await expect(() => 
+      sut.execute({
+        checkInId: createdCheckIn.id
+      })).rejects.toBeInstanceOf(Error)
   })
 })
