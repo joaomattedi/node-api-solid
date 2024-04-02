@@ -1,7 +1,5 @@
 import {FastifyRequest, FastifyReply} from 'fastify'
 import { z } from "zod"
-import { RegisterUserService } from '../services/register.service'
-import { PrimaUsersRepository } from '@/repositories/prisma/prisma-users-repository'
 import { UserAlreadyExistsError } from '../services/errors/user-already-exists-error'
 import { makeRegisterService } from '../services/factories/make-register-service'
 
